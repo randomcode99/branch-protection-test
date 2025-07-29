@@ -1,0 +1,20 @@
+name: Protect Main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-pr-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR source branch
+        run: |
+          echo "Base branch: ${{ github.event.pull_request.base.ref }}"
+          echo "Head branch: ${{ github.event.pull_request.head.ref }}"
+          if [ "${{ github.event.pull_request.head.ref }}" != "test" ]; then
+            echo "Main branch is protected. Make sure the pull request is generated from the test branch"
+            exit 1
+          fi
+          echo "PR is from 'test' branch. Proceeding."
